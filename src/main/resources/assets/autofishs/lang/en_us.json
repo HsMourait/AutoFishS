@@ -1,0 +1,18 @@
+{
+  "key.autofishs.open_config": "Open Config Screen",
+  "key.autofishs.open_blacklist": "Open Fishing Blacklist",
+  "key.category.autofishs.autofishs": "AutoFishS",
+  "autofishs.blacklist.title": "Fishing Blacklist",
+  "autofishs.blacklist.search": "Search fish...",
+  "autofishs.config.title": "AutoFishS Config",
+  "autofishs.config.autohit": "Minigame Auto-Hit: %s",
+  "autofishs.config.autoreel": "Auto-Reel on Bite: %s",
+  "autofishs.config.autocast": "Auto-Cast After Session: %s",
+  "autofishs.config.treasure": "Focus Treasure Spots: %s",
+  "autofishs.config.frozen": "Click Frozen Spots: %s",
+  "autofishs.config.explosive": "Click Explosive (TNT) Spots: %s",
+  "autofishs.config.mode": "SC Mode: %s",
+  "autofishs.config.fo_mode": "FO Mode: %s",
+  "autofishs.config.interval": "Hit Interval (sec): %s",
+  "autofishs.config.leeway": "Perfect Leeway (degrees): %s"
+}

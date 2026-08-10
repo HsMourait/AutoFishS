@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+bin/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Minecraft dev run instance
+run/
+
+# Local third-party dependencies (not part of the mod's version)
+libs/
+
+# Third-party source trees used for composite build / reference
+SourceCode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,18 @@
+{
+  "key.autofishs.open_config": "打开配置界面",
+  "key.autofishs.open_blacklist": "打开钓鱼黑名单",
+  "key.category.autofishs.autofishs": "AutoFishS",
+  "autofishs.blacklist.title": "钓鱼黑名单",
+  "autofishs.blacklist.search": "搜索鱼...",
+  "autofishs.config.title": "AutoFishS 配置",
+  "autofishs.config.autohit": "小游戏自动命中：%s",
+  "autofishs.config.autoreel": "咬钩自动收杆：%s",
+  "autofishs.config.autocast": "结束后自动抛竿：%s",
+  "autofishs.config.treasure": "专注宝藏钓点：%s",
+  "autofishs.config.frozen": "点击冰冻钓点：%s",
+  "autofishs.config.explosive": "点击爆炸(TNT)钓点：%s",
+  "autofishs.config.mode": "SC模式：%s",
+  "autofishs.config.fo_mode": "FO模式：%s",
+  "autofishs.config.interval": "命中间隔（秒）：%s",
+  "autofishs.config.leeway": "完美容差（角度）：%s"
+}

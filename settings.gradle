@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.9.0'
+}
+
+// Build starcatcher from source alongside AutoFishS so its mixins are compiled
+// against dev (named) mappings and work in the runClient dev environment.
+// The starcatcher source tree is NOT part of this repository (it is a third-party
+// dependency), so the composite build only activates when the source is present
+// locally; otherwise gradle falls back to resolving 'com.wdiscute:starcatcher'
+// from the configured repositories.
+if (file('SourceCode/starcatcher-2.3-1.20.1').isDirectory()) {
+    includeBuild('SourceCode/starcatcher-2.3-1.20.1') {
+        dependencySubstitution {
+            substitute module('com.wdiscute:starcatcher') using project(':')
+        }
+    }
+}
