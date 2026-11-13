@@ -31,15 +31,16 @@ obfuscation {
 }
 
 dependencies {
-    // compile-time access to starcatcher classes (client-side only)
-    // resolved to the starcatcher project via the composite build (includeBuild) in settings.gradle
-    modCompileOnly "com.wdiscute:starcatcher:${starcatcher_version}"
+    // compile-time access to starcatcher classes (client-side only).
+    // Sourced from the Modrinth maven (repository 'Modrinth' above); the mod* configurations
+    // deobfuscate the production jar for us, so no local source checkout is required.
+    modCompileOnly "maven.modrinth:starcatcher:${starcatcher_version}"
     // dev run classpath so the host mod is present at runtime, NOT bundled into our jar
-    modLocalRuntime "com.wdiscute:starcatcher:${starcatcher_version}"
+    modLocalRuntime "maven.modrinth:starcatcher:${starcatcher_version}"
 
-    // starcatcher bundles these as jarJar'd mod dependencies. In a composite build their
-    // deobfuscation metadata doesn't propagate to us, so declare them explicitly as
-    // deobfuscated dev-run deps to keep their client mixins working in runClient.
+    // starcatcher jarJars these mod dependencies. Declared explicitly so a dev run has them
+    // deobfuscated on the classpath (not needed for the released jar - they are compileOnly
+    // via starcatcher and never bundled).
     modLocalRuntime "net.nikdo53:NeoBackports:${neobackports_version}"
     modLocalRuntime "maven.modrinth:tiny-multiblock-lib:forge-1.20.1-${tiny_multiblock_lib_version}"
     modLocalRuntime "maven.modrinth:libtooltips:2.1-FORGE-1.20.1"
@@ -132,3 +133,4 @@ idea {
         downloadJavadoc = true
     }
 }
+
