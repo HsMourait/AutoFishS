@@ -271,7 +271,7 @@ public class BlacklistScreen extends Screen
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 8, COLOR_TITLE);
         guiGraphics.drawCenteredString(this.font,
@@ -336,13 +336,13 @@ public class BlacklistScreen extends Screen
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta)
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY)
     {
         if (maxScrollRows <= 0)
             return false;
 
         int before = scrollRows;
-        scrollRows = Mth.clamp(scrollRows - (int) Math.round(delta), 0, maxScrollRows);
+        scrollRows = Mth.clamp(scrollRows - (int) Math.round(scrollY), 0, maxScrollRows);
         return scrollRows != before;
     }
 

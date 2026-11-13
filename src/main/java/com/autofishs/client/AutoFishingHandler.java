@@ -145,9 +145,12 @@ public final class AutoFishingHandler
     }
 
     /**
-     * Locates the private static FishingHook.DATA_BITING accessor by finding the
-     * static EntityDataAccessor whose serializer is BOOLEAN. Avoids hardcoding the
-     * field name, which differs between dev (named) and production (SRG) mappings.
+     * Resolves the private static FishingHook.DATA_BITING accessor by field name.
+     * <p>
+     * NeoForge 1.21 ships Minecraft with official Mojang names in production, so the field is
+     * literally called {@code DATA_BITING} in both the dev workspace and the released jar. The
+     * previous serializer-based scan no longer works: {@code EntityDataAccessor} stopped exposing
+     * its serializer in 1.21.
      */
     private static EntityDataAccessor<Boolean> getDataBitingAccessor()
     {
@@ -155,24 +158,9 @@ public final class AutoFishingHandler
         vanillaInit = true;
         try
         {
-            for (Field f : FishingHook.class.getDeclaredFields())
-            {
-                if (Modifier.isStatic(f.getModifiers()) && EntityDataAccessor.class.isAssignableFrom(f.getType()))
-                {
-                    f.setAccessible(true);
-                    Object value = f.get(null);
-                    if (value instanceof EntityDataAccessor<?> accessor
-                            && accessor.getSerializer() == EntityDataSerializers.BOOLEAN)
-                    {
-                        dataBitingAccessor = (EntityDataAccessor<Boolean>) accessor;
-                        break;
-                    }
-                }
-            }
-            if (dataBitingAccessor == null)
-            {
-                AutoFishS.LOGGER.warn("[AutoFishS] Vanilla FishingHook.DATA_BITING not found, vanilla auto-reel disabled");
-            }
+            Field field = FishingHook.class.getDeclaredField("DATA_BITING");
+            field.setAccessible(true);
+            dataBitingAccessor = (EntityDataAccessor<Boolean>) field.get(null);
         }
         catch (ReflectiveOperationException e)
         {

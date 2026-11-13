@@ -2,12 +2,13 @@ package com.autofishs;
 
 import com.autofishs.client.AutoFishSConfigScreen;
 import com.mojang.logging.LogUtils;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ConfigTracker;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.slf4j.Logger;
 
 /**
@@ -23,27 +24,28 @@ public class AutoFishS
     public static final String MOD_ID = "autofishs";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public AutoFishS()
+    public AutoFishS(ModContainer modContainer)
     {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, AutoFishSConfig.SPEC);
+        // ConfigTracker.registerConfig is used (instead of ModContainer#registerConfig) because it
+        // returns the ModConfig instance, which AutoFishSConfig needs in order to persist changes.
+        AutoFishSConfig.attach(ConfigTracker.INSTANCE.registerConfig(
+                ModConfig.Type.CLIENT, AutoFishSConfig.SPEC, modContainer));
 
-        // Guarded by an explicit dist check (instead of DistExecutor.safeRunWhenOn) so the
-        // client-only Client class is never loaded on the dedicated server.
+        // Guarded by an explicit dist check so the client-only Client class is never
+        // loaded on the dedicated server.
         if (FMLEnvironment.dist == Dist.CLIENT)
         {
-            Client.init();
+            Client.init(modContainer);
         }
     }
 
     public static class Client
     {
-        public static void init()
+        public static void init(ModContainer modContainer)
         {
             // Registers a config screen so ESC -> Mods -> AutoFishS -> Config opens AutoFishSConfigScreen.
-            ModLoadingContext.get().registerExtensionPoint(
-                    ConfigScreenHandler.ConfigScreenFactory.class,
-                    () -> new ConfigScreenHandler.ConfigScreenFactory(
-                            (modsScreen) -> new AutoFishSConfigScreen(modsScreen)));
+            modContainer.registerExtensionPoint(IConfigScreenFactory.class,
+                    (IConfigScreenFactory) (minecraft, parent) -> new AutoFishSConfigScreen(parent));
 
             LOGGER.info("[AutoFishS] client init complete");
         }

@@ -1,33 +1,31 @@
-modLoader="javafml" #mandatory
-
-loaderVersion="${loader_version_range}" #mandatory
-
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
-[[mods]] #mandatory
+[[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
-[[dependencies.${mod_id}]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="${forge_version_range}" #mandatory
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_version_range}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="starcatcher"
-    mandatory=true
-    versionRange="[1.20.1,)"
+    type="required"
+    versionRange="[2.3,)"
     ordering="NONE"
     side="BOTH"

@@ -214,7 +214,7 @@ public class AutoFishSConfigScreen extends Screen
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
         for (Header header : headers)
         {
@@ -230,12 +230,12 @@ public class AutoFishSConfigScreen extends Screen
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta)
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY)
     {
         if (maxScroll <= 0) return false;
 
         int before = scrollOffset;
-        scrollOffset = Mth.clamp(scrollOffset - (int) Math.round(delta) * 15, 0, maxScroll);
+        scrollOffset = Mth.clamp(scrollOffset - (int) Math.round(scrollY) * 15, 0, maxScroll);
         if (scrollOffset != before)
         {
             layout();

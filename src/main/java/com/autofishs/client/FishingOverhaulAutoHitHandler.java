@@ -5,7 +5,7 @@ import com.autofishs.AutoFishSConfig;
 import com.autofishs.AutoFishSConfig.AutoHitMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 import java.lang.reflect.Field;
 
