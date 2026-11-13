@@ -28,6 +28,9 @@ public class AutoFishSConfigScreen extends Screen
     private static final int ROW_W = 310;
     private static final int HEADER_H = 24;
     private static final int COLOR_HEADER = 0xFF9AA0A6;
+    /** Gap between the bottom of the scroll clip and the fixed Back button. */
+    private static final int CONTENT_GAP = 10;
+    private static final int COLOR_DIVIDER = 0x60FFFFFF;
 
     private final Screen parent;
     private final List<Entry> entries = new ArrayList<>();
@@ -46,6 +49,9 @@ public class AutoFishSConfigScreen extends Screen
 
     private int scrollOffset = 0;
     private int maxScroll = 0;
+    /** Vertical bounds of the scrollable band; rows are clipped to it in render(). */
+    private int contentTop = 0;
+    private int contentBottom = 0;
 
     private record Entry(AbstractWidget widget, int baseY) {}
 
@@ -146,7 +152,9 @@ public class AutoFishSConfigScreen extends Screen
         y += ROW_H;
 
         int backY = this.height - 30;
-        maxScroll = Math.max(0, y - (backY - ROW_H));
+        contentTop = Math.max(20, this.height / 6);
+        contentBottom = backY - CONTENT_GAP;
+        maxScroll = Math.max(0, y - contentBottom);
         scrollOffset = Mth.clamp(scrollOffset, 0, maxScroll);
         layout();
 
@@ -199,7 +207,10 @@ public class AutoFishSConfigScreen extends Screen
 
     private void addEntry(AbstractWidget w, int baseY)
     {
-        this.addRenderableWidget(w);
+        // Children only, deliberately not renderables: the rows are drawn by hand inside the
+        // scroll clip in render(). Registering them as renderables would let super.render draw
+        // them a second time, unclipped, which is what used to slide them over the Back button.
+        this.addWidget(w);
         entries.add(new Entry(w, baseY));
     }
 
@@ -207,7 +218,11 @@ public class AutoFishSConfigScreen extends Screen
     {
         for (Entry e : entries)
         {
-            e.widget().setY(e.baseY() - scrollOffset);
+            int rowY = e.baseY() - scrollOffset;
+            e.widget().setY(rowY);
+            // Rows that fall entirely outside the band are hidden outright so they cannot swallow
+            // clicks while invisible; partially visible rows are cut by the scissor in render().
+            e.widget().visible = rowY + 20 > contentTop && rowY < contentBottom;
         }
     }
 
@@ -216,15 +231,31 @@ public class AutoFishSConfigScreen extends Screen
     {
         renderBackground(guiGraphics);
 
+        // Everything that scrolls lives inside this clip, so rows are cut off at the divider
+        // instead of sliding over the fixed Back button. The Back button is the only renderable
+        // widget left, so super.render() below draws nothing that belongs to the scroll band.
+        guiGraphics.enableScissor(0, contentTop - 2, this.width, contentBottom + 2);
+
         for (Header header : headers)
         {
             int headerY = header.baseY() - scrollOffset;
-            if (headerY < -HEADER_H || headerY > this.height)
+            if (headerY < contentTop - HEADER_H || headerY > contentBottom)
                 continue;
 
             guiGraphics.drawString(this.font, Component.translatable(header.key()),
                     this.width / 2 - ROW_W / 2, headerY, COLOR_HEADER, false);
         }
+
+        for (Entry e : entries)
+        {
+            e.widget().render(guiGraphics, mouseX, mouseY, partialTicks);
+        }
+
+        guiGraphics.disableScissor();
+
+        // Divider marking the bottom of the scroll band, above the fixed Back button.
+        guiGraphics.fill(this.width / 2 - ROW_W / 2, contentBottom + 4,
+                this.width / 2 + ROW_W / 2, contentBottom + 5, COLOR_DIVIDER);
 
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
