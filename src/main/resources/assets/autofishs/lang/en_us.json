@@ -19,5 +19,6 @@
   "autofishs.config.mode": "SC Mode: %s",
   "autofishs.config.fo_mode": "FO Mode: %s",
   "autofishs.config.interval": "Hit Interval (sec): %s",
-  "autofishs.config.leeway": "Perfect Leeway (degrees): %s"
+  "autofishs.config.leeway": "Perfect Leeway (degrees): %s",
+  "autofishs.config.allow_uncaught": "Work on Uncaught Fish: %s"
 }
