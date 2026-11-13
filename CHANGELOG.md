@@ -3,7 +3,7 @@
 ## [0.5.3] - 2026-11-14
 
 ### Added
-- **新配置项「未钓过的鱼也生效」**（`allowOnUncaughtFish`，默认关闭）。开启后，即使正在钓的鱼还没记录进钓鱼图鉴，小游戏自动命中同样生效。在 config/autofishs-client.toml 中可编辑。
+- **新配置项「未钓过的鱼也生效」**（`allowOnUncaughtFish`）。开启后，即使正在钓的鱼还没记录进钓鱼图鉴，小游戏自动命中同样生效。在 config/autofishs-client.toml 中可编辑。
 
 ### Changed
 - 优化F8配置屏幕的显示。
