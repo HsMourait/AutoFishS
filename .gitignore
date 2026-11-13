@@ -17,6 +17,9 @@ libs/
 # Third-party source trees used for composite build / reference
 SourceCode/
 
+# Local-only helper scripts (download/lint utilities, machine specific)
+tools/
+
 # OS
 .DS_Store
 Thumbs.db
