@@ -108,6 +108,17 @@ public class BlacklistScreen extends Screen
         applyFilter();
     }
 
+    /**
+     * Vanilla focuses the first tab-navigable widget when the screen opens, and the search box is
+     * added first -- so it always came up with the focus outline drawn, reading as a permanently
+     * selected box. Leave the keyboard untouched until the player actually clicks it; typing into
+     * it still works from that point on.
+     */
+    @Override
+    protected void setInitialFocus()
+    {
+    }
+
     // ------------------------------------------------------------------ data
 
     /**
@@ -271,7 +282,14 @@ public class BlacklistScreen extends Screen
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        // 1.21.1 draws the background from inside Screen#render, and for in-world screens that
+        // means renderBlurredBackground -> processBlurEffect + bindWrite, a post-effect that
+        // repaints the whole frame buffer. Calling renderBackground ourselves and then letting
+        // super.render call it a second time put that blur on top of the grid, so the whole list
+        // ended up looking like part of the frosted backdrop while the widgets (drawn afterwards)
+        // stayed crisp. Let super.render do the background and draw our layer above it instead --
+        // the same order vanilla's AbstractContainerScreen uses.
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 8, COLOR_TITLE);
         guiGraphics.drawCenteredString(this.font,
@@ -308,9 +326,6 @@ public class BlacklistScreen extends Screen
         }
 
         guiGraphics.disableScissor();
-
-        // widget layer (search box, back button) on top of the grid
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         if (hovered != null)
             guiGraphics.renderTooltip(this.font, hovered.getDefaultInstance(), mouseX, mouseY);
