@@ -84,7 +84,7 @@ public final class MinigameAutoHitHandler
         // be flippable from the config file or the config screen.
         if (!ALLOW_IN_TOURNAMENT && TournamentOverlay.tournament != null)
             return;
-        if (!AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get() && !isFishInCatalogue(mc.player, screen.itemBeingFished))
+        if (!isUncaughtFishAllowed(mc.player, screen))
             return;
 
         // Skip the minigame itself when the hidden brute-force constant is on. Done before the
@@ -174,6 +174,30 @@ public final class MinigameAutoHitHandler
     {
         Map<ResourceLocation, FishCaughtCounter> caught = FishingGuideAttachment.getFishesCaught(player);
         return caught.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+    }
+
+    /**
+     * Decides whether the assist may run on a fish the player has not caught yet.
+     * <p>
+     * Already-caught fish are always allowed. For uncaught ones the {@code allowOnUncaughtFish}
+     * toggle gates the whole thing and {@code uncaughtFishRarities} narrows it down per
+     * Starcatcher rarity, so low-tier fish can go on autopilot while epic/legendary still have to
+     * be played by hand the first time. Both settings live in the generated .toml only.
+     */
+    private static boolean isUncaughtFishAllowed(Player player, FishingMinigameScreen screen)
+    {
+        if (isFishInCatalogue(player, screen.itemBeingFished))
+            return true;
+        if (!AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get())
+            return false;
+
+        String rarity = screen.rarity == null ? "none" : screen.rarity.getSerializedName();
+        for (String allowed : AutoFishSConfig.UNCAUGHT_FISH_RARITIES.get())
+        {
+            if (allowed != null && allowed.equalsIgnoreCase(rarity))
+                return true;
+        }
+        return false;
     }
 
     /** True when the fish is close to escaping (catch progress below half of its max). */

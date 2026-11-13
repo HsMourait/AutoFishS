@@ -34,7 +34,6 @@ public class AutoFishSConfigScreen extends Screen
     private final List<Header> headers = new ArrayList<>();
 
     private Button autoHitButton;
-    private Button allowUncaughtButton;
     private Button autoReelButton;
     private Button autoCastButton;
     private Button treasureFocusButton;
@@ -93,11 +92,6 @@ public class AutoFishSConfigScreen extends Screen
         autoHitButton = addToggle(cx, y, "autofishs.config.autohit",
                 AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT::get,
                 () -> AutoFishSConfig.setAutoHit(!AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get()));
-        y += ROW_H;
-
-        allowUncaughtButton = addToggle(cx, y, "autofishs.config.allow_uncaught",
-                AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH::get,
-                () -> AutoFishSConfig.setAllowOnUncaughtFish(!AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get()));
         y += ROW_H;
 
         // ---- Sweet spot strategy ----
@@ -255,7 +249,6 @@ public class AutoFishSConfigScreen extends Screen
     private void refresh()
     {
         autoHitButton.setMessage(label("autofishs.config.autohit", AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get()));
-        allowUncaughtButton.setMessage(label("autofishs.config.allow_uncaught", AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get()));
         autoReelButton.setMessage(label("autofishs.config.autoreel", AutoFishSConfig.ENABLE_AUTO_REEL.get()));
         autoCastButton.setMessage(label("autofishs.config.autocast", AutoFishSConfig.ENABLE_AUTO_CAST.get()));
         treasureFocusButton.setMessage(label("autofishs.config.treasure", AutoFishSConfig.TREASURE_FOCUS.get()));

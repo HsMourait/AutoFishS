@@ -19,6 +19,5 @@
   "autofishs.config.mode": "SC模式：%s",
   "autofishs.config.fo_mode": "FO模式：%s",
   "autofishs.config.interval": "命中间隔（秒）：%s",
-  "autofishs.config.leeway": "完美容差（角度）：%s",
-  "autofishs.config.allow_uncaught": "未钓过的鱼也生效：%s"
+  "autofishs.config.leeway": "完美容差（角度）：%s"
 }

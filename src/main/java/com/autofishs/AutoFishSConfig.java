@@ -38,10 +38,25 @@ public class AutoFishSConfig
                             "PERFECT = only hit when the pointer is near the center of a sweet spot (better scoring).")
                     .defineEnum("mode", AutoHitMode.AUTO);
 
+    // Config-file only on purpose: neither of these is exposed in the in-game config screen, so
+    // they have to be edited in the generated .toml.
     public static final ModConfigSpec.BooleanValue ALLOW_ON_UNCAUGHT_FISH =
             BUILDER.comment("Also assist the Starcatcher minigame on fish that are not in your guide yet.",
-                            "Off by default: the mod only helps with fish you have already caught once.")
+                            "Off by default: the mod only helps with fish you have already caught once.",
+                            "Config-file only -- there is no row for this in the in-game config screen.",
+                            "When enabled, uncaughtFishRarities below narrows it down by rarity.")
                     .define("allowOnUncaughtFish", false);
+
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> UNCAUGHT_FISH_RARITIES =
+            BUILDER.comment("Which rarities allowOnUncaughtFish applies to. Ignored while that is false.",
+                            "Valid values: none, trash, common, uncommon, rare, epic, legendary, golden",
+                            "Fish you have already caught once are never gated by rarity.",
+                            "Leaving only the low rarities here means epic/legendary fish still have to be",
+                            "played by hand the first time you meet them.",
+                            "An empty list means no rarity is allowed (same as allowOnUncaughtFish = false).")
+                    .defineListAllowEmpty("uncaughtFishRarities",
+                            () -> List.of("trash", "common", "uncommon", "rare"),
+                            o -> o instanceof String);
 
     public static final ModConfigSpec.EnumValue<AutoHitMode> FO_MODE =
             BUILDER.comment("Hit target for the Fishing Overhaul minigame.",
@@ -116,12 +131,6 @@ public class AutoFishSConfig
     public static void setMode(AutoHitMode mode)
     {
         MODE.set(mode);
-        save();
-    }
-
-    public static void setAllowOnUncaughtFish(boolean enabled)
-    {
-        ALLOW_ON_UNCAUGHT_FISH.set(enabled);
         save();
     }
 
