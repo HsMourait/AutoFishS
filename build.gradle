@@ -54,6 +54,13 @@ dependencies {
     // reobfuscation step was removed), so a plain compileOnly of the production jar is
     // enough here - no deobfuscating configuration required.
     compileOnly "maven.modrinth:starcatcher:${starcatcher_version}"
+
+    // Dev-run only (`gradlew runClient`): the host mod has to be on the runtime classpath,
+    // otherwise our tick handlers hit NoClassDefFoundError on Starcatcher classes one tick
+    // into the game. Starcatcher's own jarJar dependencies are extracted by FML in dev, so
+    // they must NOT be declared here - doing so shadows the bundled versions and breaks
+    // Starcatcher's version constraints (e.g. it requires libtooltips [1.6,1.9)).
+    runtimeOnly "maven.modrinth:starcatcher:${starcatcher_version}"
 }
 
 // Expands ${...} placeholders in the metadata template.
