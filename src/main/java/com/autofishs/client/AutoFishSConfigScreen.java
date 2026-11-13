@@ -34,6 +34,7 @@ public class AutoFishSConfigScreen extends Screen
     private final List<Header> headers = new ArrayList<>();
 
     private Button autoHitButton;
+    private Button allowUncaughtButton;
     private Button autoReelButton;
     private Button autoCastButton;
     private Button treasureFocusButton;
@@ -92,6 +93,11 @@ public class AutoFishSConfigScreen extends Screen
         autoHitButton = addToggle(cx, y, "autofishs.config.autohit",
                 AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT::get,
                 () -> AutoFishSConfig.setAutoHit(!AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get()));
+        y += ROW_H;
+
+        allowUncaughtButton = addToggle(cx, y, "autofishs.config.allow_uncaught",
+                AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH::get,
+                () -> AutoFishSConfig.setAllowOnUncaughtFish(!AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get()));
         y += ROW_H;
 
         // ---- Sweet spot strategy ----
@@ -214,7 +220,11 @@ public class AutoFishSConfigScreen extends Screen
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        // 1.21.1 draws the background from inside Screen#render, and for in-world screens that
+        // means the blur post-effect. Painting the section headers before that call buried them
+        // under the blur -- the same bug the blacklist screen had. Background first, our labels
+        // on top of it.
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         for (Header header : headers)
         {
@@ -225,8 +235,6 @@ public class AutoFishSConfigScreen extends Screen
             guiGraphics.drawString(this.font, Component.translatable(header.key()),
                     this.width / 2 - ROW_W / 2, headerY, COLOR_HEADER, false);
         }
-
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -247,6 +255,7 @@ public class AutoFishSConfigScreen extends Screen
     private void refresh()
     {
         autoHitButton.setMessage(label("autofishs.config.autohit", AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get()));
+        allowUncaughtButton.setMessage(label("autofishs.config.allow_uncaught", AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get()));
         autoReelButton.setMessage(label("autofishs.config.autoreel", AutoFishSConfig.ENABLE_AUTO_REEL.get()));
         autoCastButton.setMessage(label("autofishs.config.autocast", AutoFishSConfig.ENABLE_AUTO_CAST.get()));
         treasureFocusButton.setMessage(label("autofishs.config.treasure", AutoFishSConfig.TREASURE_FOCUS.get()));

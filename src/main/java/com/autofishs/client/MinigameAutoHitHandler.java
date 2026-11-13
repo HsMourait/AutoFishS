@@ -31,8 +31,23 @@ public final class MinigameAutoHitHandler
 {
     /** Whether auto-hit works while the player is in an active Starcatcher tournament. */
     public static final boolean ALLOW_IN_TOURNAMENT = false;
-    /** Whether auto-hit works on fish the player has not caught yet (not in the catalogue). */
-    public static final boolean ALLOW_ON_UNCAUGHT_FISH = false;
+
+    /**
+     * Brute-force mode: skip the Starcatcher minigame entirely instead of playing it.
+     * <p>
+     * Deliberately source-only. There is no config key, no row in the config screen and no
+     * changelog entry for it -- flip it here and rebuild if you want it.
+     * <p>
+     * Implementation note: rather than forging a {@code FishingCompletedPayload} by hand, this
+     * pushes {@code progress} past {@code hp}. Starcatcher's own success branch then runs
+     * ({@code FishingMinigameScreen:631}) and sends exactly the packet a legitimate clear would,
+     * including the follow-up {@code (-1, false, false, hits)} that {@code onClose()} always
+     * emits. The server has nothing to notice.
+     * <p>
+     * On a multiplayer server this is indistinguishable from cheating, which is why it is not
+     * exposed anywhere a player can reach.
+     */
+    public static final boolean BRUTE_FORCE_MODE = false;
 
     private static int hitCooldown = 0;
     private static FishingMinigameScreen lastScreen = null;
@@ -65,11 +80,21 @@ public final class MinigameAutoHitHandler
             return;
         }
 
-        // Source-level gates (edit the constants above to override; not configurable).
+        // Eligibility gates. The tournament one stays a source constant on purpose: it must not
+        // be flippable from the config file or the config screen.
         if (!ALLOW_IN_TOURNAMENT && TournamentOverlay.tournament != null)
             return;
-        if (!ALLOW_ON_UNCAUGHT_FISH && !isFishInCatalogue(mc.player, screen.itemBeingFished))
+        if (!AutoFishSConfig.ALLOW_ON_UNCAUGHT_FISH.get() && !isFishInCatalogue(mc.player, screen.itemBeingFished))
             return;
+
+        // Skip the minigame itself when the hidden brute-force constant is on. Done before the
+        // auto-hit flag so it does not depend on the assist being enabled.
+        if (BRUTE_FORCE_MODE)
+        {
+            screen.progress = screen.hp + 1;
+            screen.progressSmooth = screen.hp + 1;
+            return;
+        }
 
         if (!AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get())
             return;

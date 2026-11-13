@@ -38,6 +38,11 @@ public class AutoFishSConfig
                             "PERFECT = only hit when the pointer is near the center of a sweet spot (better scoring).")
                     .defineEnum("mode", AutoHitMode.AUTO);
 
+    public static final ModConfigSpec.BooleanValue ALLOW_ON_UNCAUGHT_FISH =
+            BUILDER.comment("Also assist the Starcatcher minigame on fish that are not in your guide yet.",
+                            "Off by default: the mod only helps with fish you have already caught once.")
+                    .define("allowOnUncaughtFish", false);
+
     public static final ModConfigSpec.EnumValue<AutoHitMode> FO_MODE =
             BUILDER.comment("Hit target for the Fishing Overhaul minigame.",
                             "AUTO    = click when the fish is in the normal catch area.",
@@ -111,6 +116,12 @@ public class AutoFishSConfig
     public static void setMode(AutoHitMode mode)
     {
         MODE.set(mode);
+        save();
+    }
+
+    public static void setAllowOnUncaughtFish(boolean enabled)
+    {
+        ALLOW_ON_UNCAUGHT_FISH.set(enabled);
         save();
     }
 
