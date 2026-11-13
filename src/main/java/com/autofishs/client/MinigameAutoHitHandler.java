@@ -120,7 +120,7 @@ public final class MinigameAutoHitHandler
             // Only hit when the pointer is near the center of the closest targetable sweet spot.
             ActiveSweetSpot best = findClosestSpot(targetable, pointerPos);
             if (best == null) return false;
-            return isNearCenter(pointerPos, best.pos, AutoFishSConfig.PERFECT_LEEWAY.get());
+            return isNearCenter(pointerPos, best, AutoFishSConfig.PERFECT_LEEWAY.get());
         }
 
         // AUTO: hit when the pointer overlaps any targetable sweet spot (same check starcatcher uses to score a hit).
@@ -183,9 +183,23 @@ public final class MinigameAutoHitHandler
         return closest;
     }
 
-    private static boolean isNearCenter(float pointerPos, float centerPos, int leeway)
+    /**
+     * PERFECT gate: the pointer must sit near the spot's center, but never outside the window the
+     * host actually scores.
+     * <p>
+     * Starcatcher only registers a hit while {@code |Δ| < spot.thickness / 2} — strict comparison,
+     * integer division (see {@code FishingMinigameScreen.doDegreesOverlapWithLeeway}, which
+     * {@code inputPressed()} calls with {@code ass.thickness / 2}). The configured leeway is
+     * therefore clamped into that window. Without the clamp a leeway wider than the spot's half
+     * width makes every press fall outside the spot: {@code inputPressed()} finds nothing to hit
+     * and applies the miss penalty ({@code progress -= penalty}). Thin spots are the worst case —
+     * {@code THIN} has thickness 15, i.e. a real window of |Δ| &lt; 7.
+     */
+    private static boolean isNearCenter(float pointerPos, ActiveSweetSpot spot, int configuredLeeway)
     {
-        return angularDistance(pointerPos, centerPos) <= leeway;
+        int halfWidth = spot.thickness / 2;
+        int effective = Math.min(configuredLeeway, Math.max(0, halfWidth - 1));
+        return angularDistance(pointerPos, spot.pos) <= effective;
     }
 
     /** Shortest unsigned angular distance between two degree values, in [0, 180]. */
