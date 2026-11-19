@@ -89,7 +89,11 @@ legacyForge {
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-            logLevel = org.slf4j.event.Level.WARN
+            // INFO, not WARN. At WARN the dev run printed nothing at all between the Gradle banner
+            // and the game window appearing, which made a slow-but-working launch look like a
+            // frozen terminal. slf4j's Level has no LIFECYCLE (that is a log4j level), INFO is the
+            // most verbose it offers. Dev-only setting: it does not affect the built jar.
+            logLevel = org.slf4j.event.Level.INFO
         }
     }
 

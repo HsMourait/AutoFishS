@@ -11,6 +11,7 @@
   "autofishs.config.section.rod": "—— 收杆 / 抛竿 ——",
   "autofishs.config.section.compat": "—— 兼容 ——",
   "autofishs.config.autohit": "小游戏自动命中：%s",
+  "autofishs.config.overlay": "状态面板：%s",
   "autofishs.config.autoreel": "咬钩自动收杆：%s",
   "autofishs.config.autocast": "结束后自动抛竿：%s",
   "autofishs.config.treasure": "专注宝藏钓点：%s",
@@ -19,5 +20,15 @@
   "autofishs.config.mode": "SC模式：%s",
   "autofishs.config.fo_mode": "FO模式：%s",
   "autofishs.config.interval": "命中间隔（秒）：%s",
-  "autofishs.config.leeway": "完美容差（角度）：%s"
+  "autofishs.config.leeway": "完美容差（角度）：%s",
+  "autofishs.status.mode_auto": "模式：AUTO",
+  "autofishs.status.mode_perfect": "模式：PERFECT（容差 %s°）",
+  "autofishs.status.progress": "进度：%s / %s",
+  "autofishs.status.nearest": "最近钓点：%s°",
+  "autofishs.status.disabled": "自动命中已关闭",
+  "autofishs.status.tournament": "比赛中，不介入",
+  "autofishs.status.uncaught": "未捕获，稀有度不允许",
+  "autofishs.status.brute": "暴力模式",
+  "autofishs.status.cooldown": "冷却中…",
+  "autofishs.status.ready": "等待对齐"
 }
