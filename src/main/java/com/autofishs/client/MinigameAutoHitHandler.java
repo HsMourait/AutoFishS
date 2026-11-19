@@ -49,6 +49,41 @@ public final class MinigameAutoHitHandler
      */
     public static final boolean BRUTE_FORCE_MODE = false;
 
+    /**
+     * Why the assist is (or is not) acting right now. Read by {@link MinigameStatusOverlay} so the
+     * player can tell a deliberate decision apart from a broken mod; nothing here feeds back into
+     * the hit logic.
+     */
+    public enum AssistState
+    {
+        DISABLED("disabled"),
+        TOURNAMENT("tournament"),
+        UNCAUGHT("uncaught"),
+        BRUTE_FORCE("brute"),
+        COOLDOWN("cooldown"),
+        READY("ready");
+
+        private final String key;
+
+        AssistState(String key)
+        {
+            this.key = key;
+        }
+
+        public String langKey()
+        {
+            return "autofishs.status." + key;
+        }
+    }
+
+    private static AssistState assistState = AssistState.DISABLED;
+
+    /** Last decision taken in {@link #tick()}; purely for the on-screen read-out. */
+    public static AssistState assistState()
+    {
+        return assistState;
+    }
+
     private static int hitCooldown = 0;
     private static FishingMinigameScreen lastScreen = null;
     private static boolean blacklistApplied = false;
@@ -64,6 +99,7 @@ public final class MinigameAutoHitHandler
             hitCooldown = 0;
             lastScreen = null;
             blacklistApplied = false;
+            assistState = AssistState.DISABLED;
             return;
         }
 
@@ -76,6 +112,8 @@ public final class MinigameAutoHitHandler
         if (!blacklistApplied && isBlacklisted(screen.itemBeingFished))
         {
             blacklistApplied = true;
+            // No AssistState for this one: closing the screen ends the read-out immediately, so
+            // there would be nothing left to draw it on.
             screen.onClose();
             return;
         }
@@ -83,32 +121,47 @@ public final class MinigameAutoHitHandler
         // Eligibility gates. The tournament one stays a source constant on purpose: it must not
         // be flippable from the config file or the config screen.
         if (!ALLOW_IN_TOURNAMENT && TournamentOverlay.tournament != null)
+        {
+            assistState = AssistState.TOURNAMENT;
             return;
+        }
         if (!isUncaughtFishAllowed(mc.player, screen))
+        {
+            assistState = AssistState.UNCAUGHT;
             return;
+        }
 
         // Skip the minigame itself when the hidden brute-force constant is on. Done before the
         // auto-hit flag so it does not depend on the assist being enabled.
         if (BRUTE_FORCE_MODE)
         {
+            assistState = AssistState.BRUTE_FORCE;
             screen.progress = screen.hp + 1;
             screen.progressSmooth = screen.hp + 1;
             return;
         }
 
         if (!AutoFishSConfig.ENABLE_MINIGAME_AUTO_HIT.get())
+        {
+            assistState = AssistState.DISABLED;
             return;
+        }
 
         if (hitCooldown > 0)
         {
             hitCooldown--;
+            assistState = AssistState.COOLDOWN;
             return;
         }
 
         if (!shouldHit(screen))
+        {
+            assistState = AssistState.READY;
             return;
+        }
 
         // Reset the cooldown (in ticks) so hits are at least `hitIntervalSeconds` apart.
+        assistState = AssistState.COOLDOWN;
         hitCooldown = Math.max(0, (int) Math.ceil(AutoFishSConfig.HIT_INTERVAL_SECONDS.get() * 20) - 1);
         screen.inputPressed();
     }
