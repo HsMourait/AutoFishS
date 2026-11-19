@@ -24,6 +24,12 @@ public class AutoFishSConfig
                             "Default off; enable manually in the config screen (F8) or this file.")
                     .define("enableMinigameAutoHit", false);
 
+    public static final ForgeConfigSpec.BooleanValue SHOW_STATUS_OVERLAY =
+            BUILDER.comment("Draw the assist status panel in the corner of the Starcatcher minigame.",
+                            "Shows the current mode, the catch progress, the angle to the nearest sweet",
+                            "spot, and why the auto-hit is or is not acting right now.")
+                    .define("showStatusOverlay", true);
+
     public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_REEL =
             BUILDER.comment("Automatically reel in when the Starcatcher bobber bites.")
                     .define("enableAutoReel", true);
@@ -109,6 +115,12 @@ public class AutoFishSConfig
     public static void setAutoHit(boolean enabled)
     {
         ENABLE_MINIGAME_AUTO_HIT.set(enabled);
+        save();
+    }
+
+    public static void setShowStatusOverlay(boolean enabled)
+    {
+        SHOW_STATUS_OVERLAY.set(enabled);
         save();
     }
 
