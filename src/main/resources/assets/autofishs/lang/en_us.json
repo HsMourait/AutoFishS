@@ -11,6 +11,7 @@
   "autofishs.config.section.rod": "— Reel / Cast —",
   "autofishs.config.section.compat": "— Compatibility —",
   "autofishs.config.autohit": "Minigame Auto-Hit: %s",
+  "autofishs.config.overlay": "Status Panel: %s",
   "autofishs.config.autoreel": "Auto-Reel on Bite: %s",
   "autofishs.config.autocast": "Auto-Cast After Session: %s",
   "autofishs.config.treasure": "Focus Treasure Spots: %s",
@@ -19,5 +20,15 @@
   "autofishs.config.mode": "SC Mode: %s",
   "autofishs.config.fo_mode": "FO Mode: %s",
   "autofishs.config.interval": "Hit Interval (sec): %s",
-  "autofishs.config.leeway": "Perfect Leeway (degrees): %s"
+  "autofishs.config.leeway": "Perfect Leeway (degrees): %s",
+  "autofishs.status.mode_auto": "Mode: AUTO",
+  "autofishs.status.mode_perfect": "Mode: PERFECT (leeway %s°)",
+  "autofishs.status.progress": "Progress: %s / %s",
+  "autofishs.status.nearest": "Nearest spot: %s°",
+  "autofishs.status.disabled": "Auto-hit is off",
+  "autofishs.status.tournament": "Tournament - not assisting",
+  "autofishs.status.uncaught": "Uncaught - rarity not allowed",
+  "autofishs.status.brute": "Brute force",
+  "autofishs.status.cooldown": "Cooling down...",
+  "autofishs.status.ready": "Waiting to align"
 }
