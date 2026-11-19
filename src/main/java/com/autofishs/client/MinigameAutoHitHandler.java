@@ -84,6 +84,12 @@ public final class MinigameAutoHitHandler
         return assistState;
     }
 
+    /** Ticks left before the next automatic hit is allowed (0 when not cooling down). */
+    public static int hitCooldownTicks()
+    {
+        return hitCooldown;
+    }
+
     private static int hitCooldown = 0;
     private static FishingMinigameScreen lastScreen = null;
     private static boolean blacklistApplied = false;

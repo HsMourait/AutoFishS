@@ -29,6 +29,6 @@
   "autofishs.status.tournament": "Tournament - not assisting",
   "autofishs.status.uncaught": "Uncaught - rarity not allowed",
   "autofishs.status.brute": "Brute force",
-  "autofishs.status.cooldown": "Cooling down...",
+  "autofishs.status.cooldown": "Cooling down... (%s/%s s)",
   "autofishs.status.ready": "Waiting to align"
 }
