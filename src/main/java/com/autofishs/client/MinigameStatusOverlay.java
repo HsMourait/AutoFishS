@@ -57,7 +57,7 @@ public final class MinigameStatusOverlay
         Component progress = Component.translatable("autofishs.status.progress",
                 (int) screen.progressSmooth, screen.hp);
         Component nearest = nearestSpotText(screen);
-        Component state = Component.translatable(MinigameAutoHitHandler.assistState().langKey());
+        Component state = stateText();
 
         int lines = nearest == null ? 3 : 4;
 
@@ -113,6 +113,25 @@ public final class MinigameStatusOverlay
     {
         float d = Math.abs(a - b) % 360.0F;
         return d > 180.0F ? 360.0F - d : d;
+    }
+
+    /**
+     * Status line for the current {@link AssistState}. The cooldown case also carries the
+     * remaining and total wait, so the read-out answers "how much longer" instead of just
+     * "something is pending".
+     */
+    private static Component stateText()
+    {
+        AssistState state = MinigameAutoHitHandler.assistState();
+        if (state == AssistState.COOLDOWN)
+        {
+            double total = AutoFishSConfig.HIT_INTERVAL_SECONDS.get();
+            double remaining = MinigameAutoHitHandler.hitCooldownTicks() / 20.0D;
+            return Component.translatable("autofishs.status.cooldown",
+                    String.format(Locale.ROOT, "%.2f", remaining),
+                    String.format(Locale.ROOT, "%.2f", total));
+        }
+        return Component.translatable(state.langKey());
     }
 
     private static int stateColor(AssistState state)

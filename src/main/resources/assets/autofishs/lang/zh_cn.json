@@ -29,6 +29,6 @@
   "autofishs.status.tournament": "比赛中，不介入",
   "autofishs.status.uncaught": "未捕获，稀有度不允许",
   "autofishs.status.brute": "暴力模式",
-  "autofishs.status.cooldown": "冷却中…",
+  "autofishs.status.cooldown": "冷却中…（%s/%s秒）",
   "autofishs.status.ready": "等待对齐"
 }
